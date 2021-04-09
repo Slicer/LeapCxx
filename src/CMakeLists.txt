@@ -229,6 +229,10 @@ if(BUILD_PYTHON_SWIG_BINDINGS)
                        ${CMAKE_CURRENT_BINARY_DIR}/Python/Leap.py
                        ${PROJECT_EXECUTABLE_PATH}/Leap.py)
 
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Python/Leap.py
+    DESTINATION lib COMPONENT RuntimeLibraries
+  )
+
   install(TARGETS LeapPython
     RUNTIME DESTINATION lib COMPONENT RuntimeLibraries
     LIBRARY DESTINATION lib COMPONENT RuntimeLibraries

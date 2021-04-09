@@ -1,15 +1,28 @@
 cmake_minimum_required(VERSION 3.4)
+
 include(version.cmake)
 include("standard/Standard.cmake")
 
-standard_project(LeapC++ VERSION ${LeapC++_VERSION})
+# All of our binaries go to one place:  The binaries output directory.  We only want to tinker
+# with this if we're building by ourselves, otherwise we just do whatever the enclosing project
+# wants us to do.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-unset(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG)
-unset(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE)
-unset(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG)
-unset(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE)
-unset(CMAKE_DEBUG_POSTFIX)
-unset(CMAKE_RELEASE_POSTFIX)
+# Libraries not only all wind up in the libraries directory, but we also keep them all together
+# here by putting them in the same place, regardless of whether they are debug or release.  This
+# makes globbing them together much easier.
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+# Standard environment - Position independent code, Symbols hidden by default, and standard C++11
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+project(LeapC++ VERSION ${LeapC++_VERSION})
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 parse_version(LeapC++ ${LeapC++_VERSION})

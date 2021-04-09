@@ -37,7 +37,6 @@ install(TARGETS LeapC++ EXPORT LeapC++Targets
   CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES}
 )
 
-option(BUILD_TESTING "Build Tests" OFF)
 if(BUILD_TESTING)
   add_subdirectory(testing)
 endif()

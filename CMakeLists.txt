@@ -37,6 +37,9 @@ if(WIN32)
   endif()
 endif()
 
+# Options
+option(BUILD_TESTING "Build Tests" OFF)
+
 if(BUILD_SWIG)
   find_package(PythonInterp 3)
   find_package(PythonLibs 3)

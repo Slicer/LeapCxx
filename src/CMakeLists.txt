@@ -30,10 +30,12 @@ target_link_libraries(LeapC++ LeapSDK::LeapC)
 
 include(CMakeDependentOption)
 
-install_headers(TARGET LeapC++ DESTINATION include/leapc++ COMPONENT LeapC++)
+install_headers(TARGET LeapC++ DESTINATION include/leapc++ COMPONENT Development)
+
 install(TARGETS LeapC++ EXPORT LeapC++Targets
-  DESTINATION lib
-  COMPONENT LeapC++
+  RUNTIME DESTINATION lib COMPONENT RuntimeLibraries
+  LIBRARY DESTINATION lib COMPONENT RuntimeLibraries
+  ARCHIVE DESTINATION lib COMPONENT Development
   CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES}
 )
 

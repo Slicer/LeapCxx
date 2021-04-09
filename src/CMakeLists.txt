@@ -58,6 +58,7 @@ if(BUILD_PYTHON_SWIG_BINDINGS OR BUILD_JAVA_SWIG_BINDINGS)
   include(UseSWIG)
   set(SWIG_CXX_EXTENSION "cpp")
   set_source_files_properties(${LEAP_API_SWIG_INTERFACES} PROPERTIES CPLUSPLUS ON)
+  set(UseSWIG_TARGET_NAME_PREFERENCE "STANDARD")
 endif()
 
 ##############################################################################

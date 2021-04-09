@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.4)
 
+foreach(policy IN ITEMS
+  CMP0078 # UseSWIG generates standard target names.
+  CMP0086 # UseSWIG honors SWIG_MODULE_NAME via -module flag.
+  )
+  cmake_policy(SET ${policy} NEW)
+endforeach()
+
 include(version.cmake)
 include("standard/Standard.cmake")
 

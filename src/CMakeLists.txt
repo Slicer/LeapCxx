@@ -41,42 +41,43 @@ if(BUILD_TESTING)
   add_subdirectory(testing)
 endif()
 
-option(BUILD_SWIG "Build Java & Python Swig bindings" OFF)
-if(NOT BUILD_SWIG)
-  return()
+##############################################################################
+# Settings common to all Bindings
+##############################################################################
+if(BUILD_PYTHON_SWIG_BINDINGS OR BUILD_JAVA_SWIG_BINDINGS)
+  set(LEAP_API_SWIG_INTERFACES
+    LeapC++.i
+  )
+
+  set(LEAP_API_SWIG_INTERFACES_DEPENDENCIES
+    LeapC++.h
+    LeapMath.h
+  )
+
+  find_package(SWIG 3.0 REQUIRED)
+  include(UseSWIG)
+  set(SWIG_CXX_EXTENSION "cpp")
+  set_source_files_properties(${LEAP_API_SWIG_INTERFACES} PROPERTIES CPLUSPLUS ON)
 endif()
-
-set(LEAP_API_SWIG_INTERFACES
-  LeapC++.i
-)
-
-set(LEAP_API_SWIG_INTERFACES_DEPENDENCIES
-  LeapC++.h
-  LeapMath.h
-)
-
-set(ORIGINAL_FILE_NAME "LeapJava.dll")
-configure_file(LeapC++.rc.in ${CMAKE_CURRENT_BINARY_DIR}/LeapJava.rc @ONLY)
-set(ORIGINAL_FILE_NAME "LeapPython.dll")
-configure_file(LeapC++.rc.in ${CMAKE_CURRENT_BINARY_DIR}/LeapPython.rc @ONLY)
-
-set(LEAP_JAVA_API_SRCS ${CMAKE_CURRENT_BINARY_DIR}/LeapJava.rc)
-set(LEAP_PYTHON_API_SRCS ${CMAKE_CURRENT_BINARY_DIR}/LeapPython.rc)
-
-if(ANDROID)
-  # workaround as Bionic loader does not respect rpath
-  set(LEAP_JAVA_API_SRCS ${LEAP_API_SRCS} ${LEAP_JAVA_API_SRCS})
-  set(LEAP_PYTHON_API_SRCS ${LEAP_API_SRCS} ${LEAP_PYTHON_API_SRCS})
-endif()
-include(UseSWIG)
-set(SWIG_CXX_EXTENSION "cpp")
-set_source_files_properties(${LEAP_API_SWIG_INTERFACES} PROPERTIES CPLUSPLUS ON)
 
 ##############################################################################
 # Java Bindings
 ##############################################################################
-find_package(Java COMPONENTS Development)
-if(Java_JAVAC_EXECUTABLE AND NOT Java_JAVA_EXECUTABLE MATCHES "NOTFOUND")
+if(BUILD_JAVA_SWIG_BINDINGS)
+
+  find_package(JNI 8.0 REQUIRED)
+
+  set(ORIGINAL_FILE_NAME "LeapJava.dll")
+  configure_file(LeapC++.rc.in ${CMAKE_CURRENT_BINARY_DIR}/LeapJava.rc @ONLY)
+  set(LEAP_JAVA_API_SRCS ${CMAKE_CURRENT_BINARY_DIR}/LeapJava.rc)
+
+  if(ANDROID)
+    # workaround as Bionic loader does not respect rpath
+    set(LEAP_JAVA_API_SRCS ${LEAP_API_SRCS} ${LEAP_JAVA_API_SRCS})
+  endif()
+
+  find_package(Java COMPONENTS Development REQUIRED)
+
   # OS X: Java_JAVAC_EXECUTABLE always set due to /usr/bin/javac placeholder
   #       Using FindJava.cmake's check for "No Java runtime present" string
   set(LEAP_API_SWIG_JAVA ${CMAKE_CURRENT_BINARY_DIR}/leap_api_swig_Java)
@@ -162,7 +163,20 @@ endif()
 ##############################################################################
 # Python Bindings
 ##############################################################################
-if(PYTHONLIBS_FOUND)
+if(BUILD_PYTHON_SWIG_BINDINGS)
+
+  find_package(PythonInterp 3 REQUIRED)
+  find_package(PythonLibs 3 REQUIRED)
+
+  set(ORIGINAL_FILE_NAME "LeapPython.dll")
+  configure_file(LeapC++.rc.in ${CMAKE_CURRENT_BINARY_DIR}/LeapPython.rc @ONLY)
+  set(LEAP_PYTHON_API_SRCS ${CMAKE_CURRENT_BINARY_DIR}/LeapPython.rc)
+
+  if(ANDROID)
+    # workaround as Bionic loader does not respect rpath
+    set(LEAP_PYTHON_API_SRCS ${LEAP_API_SRCS} ${LEAP_PYTHON_API_SRCS})
+  endif()
+
   set(LEAP_API_SWIG_PYTHON ${CMAKE_CURRENT_BINARY_DIR}/leap_api_swig_Python)
   add_custom_command(OUTPUT ${LEAP_API_SWIG_PYTHON}
                      COMMAND ${CMAKE_COMMAND} -E touch ${LEAP_API_SWIG_PYTHON}

@@ -38,18 +38,11 @@ if(WIN32)
 endif()
 
 # Options
+option(BUILD_JAVA_SWIG_BINDINGS "Build Java Swig bindings" OFF)
+option(BUILD_PYTHON_SWIG_BINDINGS "Build Python Swig bindings" OFF)
 option(BUILD_TESTING "Build Tests" OFF)
 
-if(BUILD_SWIG)
-  find_package(PythonInterp 3)
-  find_package(PythonLibs 3)
-  if(NOT (DEFINED PYTHON_EXECUTABLE AND DEFINED PYTHON_INCLUDE_DIR AND DEFINED PYTHON_LIBRARY))
-    message(FATAL_ERROR "Python 3 not found.")
-  endif()
-  find_package(JNI 8.0 REQUIRED)
-  find_package(SWIG 3.0 REQUIRED)
-endif()
-
+# Requirements
 find_package(LeapSDK 4.0.0 REQUIRED)
 
 # Recurse through source directories

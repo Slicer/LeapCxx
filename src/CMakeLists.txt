@@ -185,7 +185,7 @@ if(BUILD_PYTHON_SWIG_BINDINGS)
                      COMMENT "Creating Python SWIG bindings")
 
   set(SWIG_MODULE_LeapPython_NOPROXY TRUE)
-  set(CMAKE_SWIG_FLAGS -interface;LeapPython)
+  set(CMAKE_SWIG_FLAGS -interface;_LeapPython)
   set(CMAKE_SWIG_OUTDIR ${CMAKE_CURRENT_BINARY_DIR}/Python)
   set(SWIG_MODULE_LeapPython_EXTRA_DEPS ${LEAP_API_SWIG_PYTHON})
   if(CMAKE_VERSION VERSION_LESS 3.8)

@@ -244,18 +244,17 @@
 
 %extend Leap::Image {
 %pythoncode {
-  def data(self):
+  def get_data(self):
       ptr = byte_array(self.width * self.height * self.bytes_per_pixel)
       LeapPython.Image_data(self, ptr)
       return ptr
-  def distortion(self):
+  def get_distortion(self):
       ptr = float_array(self.distortion_width * self.distortion_height)
       LeapPython.Image_distortion(self, ptr)
       return ptr
-  __swig_getmethods__["data"] = data
-  if _newclass:data = _swig_property(data)
-  __swig_getmethods__["distortion"] = distortion
-  if _newclass:distortion = _swig_property(distortion)
+
+  data = property(get_data)
+  distortion = property(get_distortion)
 }}
 
 %rename("%(camelcase)s", %$isclass) "";

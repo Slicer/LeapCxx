@@ -41,13 +41,13 @@ if(BUILD_SWIG)
   find_package(PythonInterp 3)
   find_package(PythonLibs 3)
   if(NOT (DEFINED PYTHON_EXECUTABLE AND DEFINED PYTHON_INCLUDE_DIR AND DEFINED PYTHON_LIBRARY))
-    message(SEND_ERROR "Python 3 not found.")
+    message(FATAL_ERROR "Python 3 not found.")
   endif()
-  find_package(JNI 8.0)
-  find_package(SWIG 3.0)
+  find_package(JNI 8.0 REQUIRED)
+  find_package(SWIG 3.0 REQUIRED)
 endif()
 
-find_package(LeapSDK 4.0.0)
+find_package(LeapSDK 4.0.0 REQUIRED)
 
 # Recurse through source directories
 add_subdirectory(contrib)

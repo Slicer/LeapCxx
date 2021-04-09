@@ -12,6 +12,7 @@
 #    [DIRECTORY DirectoryName]   # Directory where the version files will be written, defaults to CMAKE_BINARY_DIR
 #    [NAME ProjectName]          # The project name, if different from CMAKE_PROJECT_NAME
 #    [VERSION Version]           # The version, if different from PROJECT_VERSION
+#    [COMPONENT Component]       # The component name to associated with the install rule. Default is ProjectName
 # )
 set(SELF ${CMAKE_CURRENT_LIST_DIR})
 include(DefaultValue)
@@ -19,7 +20,7 @@ include(ParseVersion)
 
 function(generate_version)
   set(options )
-  set(oneValueArgs DIRECTORY NAME)
+  set(oneValueArgs DIRECTORY NAME COMPONENT)
   set(multiValueArgs )
 
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -32,12 +33,17 @@ function(generate_version)
   configure_file(${SELF}/standard-config.cmake.in ${ARG_DIRECTORY}/${ARG_NAME_LOWER}-config.cmake @ONLY)
   configure_file(${SELF}/standard-configVersion.cmake.in ${ARG_DIRECTORY}/${ARG_NAME_LOWER}-configVersion.cmake @ONLY)
 
+  set(component ${ARG_NAME})
+  if(DEFINED ARG_COMPONENT)
+    set(component ${ARG_COMPONENT})
+  endif()
+
   # Install ${ARG_NAME}-config.cmake and ${ARG_NAME}-configVersion.cmake
   install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME_LOWER}-config.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME_LOWER}-configVersion.cmake"
     DESTINATION "."
-    COMPONENT ${CMAKE_PROJECT_NAME}
+    COMPONENT ${component}
   )
 
   # Export library
@@ -51,7 +57,7 @@ function(generate_version)
   install(
     EXPORT ${ARG_NAME}Targets
     FILE ${ARG_NAME}Targets.cmake
-    COMPONENT ${ARG_NAME}
+    COMPONENT ${component}
     NAMESPACE ${ARG_NAME}::
     DESTINATION cmake
     CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES}
